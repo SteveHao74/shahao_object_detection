@@ -46,13 +46,6 @@ class coco_DataSet(Dataset):
             self.bbox_image[counter]["labels"].append( self.class_dict[temp["label"]] )    
             self.bbox_image[counter]["iscrowd"].append( temp["occluded"])          #id
             last_file_id = pic_id
-            #temp_append.append(pic_id)
-             #id和边界框一起存
-            # if self.bbox_image.__contains__(pic_id):
-            #     self.bbox_image[pic_id].append(temp_append)
-            # else:
-            #     self.bbox_image[pic_id] = []
-            #     self.bbox_image[pic_id].append(temp_append)  
         for tem in range(len(self.bbox_image)):
             if self.bbox_image[tem]["boxes"]==[]:
                 print("147",tem)

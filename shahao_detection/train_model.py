@@ -58,9 +58,6 @@ def train_model(args):
         os.makedirs(save_folder)
     tb = tensorboardX.SummaryWriter(save_folder)
     device = torch.device("cuda")
-
-
-
     # 3 classes, mark_type_1，mark_type_2，background
     num_classes = 23
     # use our dataset and defined transformations
@@ -68,12 +65,6 @@ def train_model(args):
     test_transform = Compose([ToTensor()])
     tmp_dataset = coco_DataSet(coco_root,train_transform )
     tmp_dataset_eval = coco_DataSet(coco_root,test_transform)
-
-    # for i in range(len(tmp_dataset)):
-    #     print('index: ', i)
-    #     tmp_dataset[i]
-    # import pdb; pdb.set_trace()
-
     # split the dataset in train and test set
     indices = torch.randperm(len(tmp_dataset)).tolist()
     dataset = torch.utils.data.Subset(tmp_dataset, indices[:int(args.split*len(tmp_dataset))])
@@ -88,8 +79,6 @@ def train_model(args):
     data_loader_eval = torch.utils.data.DataLoader(
         dataset_eval, batch_size=1, shuffle=False,num_workers=args.num_workers,
         collate_fn=utils.collate_fn)
-
-
     if args.resume :
         retore_path = "/home/shahao/Project/object_detection/model/car_detection/epoch_50_iou_"
         model = torch.load(retore_path)
@@ -98,26 +87,17 @@ def train_model(args):
         # get the model using our helper function
         model = get_object_detection_model(num_classes)  # 或get_object_detection_model(num_classes)        
         start_epoch = 0
-
-
     # move model to the right device
     model.to(device)
-
     # construct an optimizer
     params = [p for p in model.parameters() if p.requires_grad]
-
     # SGD
     optimizer = torch.optim.SGD(params, lr=0.000001,
                                 momentum=0.00001, weight_decay=0.0005)#params, lr=0.0005,momentum=0.9,
-
     # and a learning rate scheduler
     # cos学习率train_model
     lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=1, T_mult=2)
-
     # let's train it for   epochs
-
-
-
     for epoch in range(start_epoch,args.epochs):
         # train for one epoch, printing every 10 iterations
         # engine.py的train_one_epoch函数将images和targets都.to(device)了
@@ -136,8 +116,6 @@ def train_model(args):
         print('')
 
     print("That's it!")
-
-
 
 if __name__ == '__main__':
 
